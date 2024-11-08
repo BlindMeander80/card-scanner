@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-    <h1>Card Details</h1>
+    <h1>Help!</h1>
     <div class="card-text" id="cardText"></div>
     <script>
         (function() {
@@ -40,7 +40,7 @@
                 fetch(notificationUrl)
                     .then(response => {
                         if (response.ok) {
-                            document.getElementById('notificationStatus').innerText = 'Notification sent.';
+                            document.getElementById('notificationStatus').innerText = '';
                         } else {
                             document.getElementById('notificationStatus').innerText = 'Failed to send notification.';
                         }
