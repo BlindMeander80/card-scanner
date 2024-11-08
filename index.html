@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Help!</title>
+    <!-- Include viewport meta tag for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Include Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,15 +16,17 @@
             margin: 20px;
             text-align: justify;
             text-justify: inter-word;
+            line-height: 1.6;
         }
         .card-text {
-            font-size: 24px; /* Increased font size */
+            font-size: 1.2em; /* Adjusted font size */
             margin-bottom: 20px;
         }
-        .notification-status {
-            font-size: 14px;
-            color: green;
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
         }
+        /* Remove unused .notification-status class */
     </style>
 </head>
 <body>
@@ -35,21 +39,29 @@
             const mainText = params.get('mainText');
             const qrText = params.get('qrText');
 
+            // Function to sanitize input
+            function sanitizeInput(text) {
+                const tempDiv = document.createElement('div');
+                tempDiv.textContent = text;
+                return tempDiv.innerHTML;
+            }
+
             // Function to format qrText content
             function formatQrText(text) {
-                return text
+                const sanitizedText = sanitizeInput(text);
+                return sanitizedText
                     .replace(/\[bold\](.*?)\[\/bold\]/g, '<strong>$1</strong>')
                     .replace(/\[color\](.*?)\[\/color\]/g, '<span style="color: blue;">$1</span>')
                     .replace(/\n/g, '<br>');
             }
 
             // Display the QR text (explanation and examples)
-            document.getElementById('cardText').innerHTML = formatQrText(qrText || 'No text provided.');
+            document.getElementById('cardText').innerHTML = qrText ? formatQrText(qrText) : 'No text provided.';
 
             // Send a request to trigger the notification via Make.com
             if (mainText) {
                 const encodedMainText = encodeURIComponent(mainText);
-                const notificationUrl = 'https://hook.eu2.make.com/69r1qvlnls7r8yxfc6uefcr3sunagtrl?value1=' + encodedMainText;
+                const notificationUrl = 'https://hook.eu2.make.com/your_unique_webhook_id?value1=' + encodedMainText;
 
                 fetch(notificationUrl)
                     .then(response => {
