@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Help!</title>
+    <!-- Include Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Replace 'Open+Sans' with your preferred font if you choose another one -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
             margin: 20px;
             text-align: justify;
             text-justify: inter-word;
         }
         .card-text {
-            font-size: 18px;
+            font-size: 24px; /* Increased font size */
             margin-bottom: 20px;
         }
         .notification-status {
@@ -30,8 +35,16 @@
             const mainText = params.get('mainText');
             const qrText = params.get('qrText');
 
+            // Function to format qrText content
+            function formatQrText(text) {
+                return text
+                    .replace(/\[bold\](.*?)\[\/bold\]/g, '<strong>$1</strong>')
+                    .replace(/\[color\](.*?)\[\/color\]/g, '<span style="color: blue;">$1</span>')
+                    .replace(/\n/g, '<br>');
+            }
+
             // Display the QR text (explanation and examples)
-            document.getElementById('cardText').innerText = qrText || 'No text provided.';
+            document.getElementById('cardText').innerHTML = formatQrText(qrText || 'No text provided.');
 
             // Send a request to trigger the notification via Make.com
             if (mainText) {
@@ -41,14 +54,13 @@
                 fetch(notificationUrl)
                     .then(response => {
                         if (response.ok) {
-                            document.getElementById('notificationStatus').innerText = '';
+                            // Notification sent successfully
                         } else {
-                            document.getElementById('notificationStatus').innerText = 'Failed to send notification.';
+                            console.error('Failed to send notification.');
                         }
                     })
                     .catch(error => {
                         console.error('Error sending notification:', error);
-                        document.getElementById('notificationStatus').innerText = 'Error sending notification.';
                     });
             }
         })();
