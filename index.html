@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Card Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .card-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .notification-status {
+            font-size: 14px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Card Details</h1>
+    <div class="card-text" id="cardText"></div>
+    <div class="notification-status" id="notificationStatus"></div>
+    <script>
+        (function() {
+            // Get query parameters from URL
+            const params = new URLSearchParams(window.location.search);
+            const mainText = params.get('mainText');
+            const qrText = params.get('qrText');
+
+            // Display the QR text (explanation and examples)
+            document.getElementById('cardText').innerText = qrText || 'No text provided.';
+
+            // Send a request to trigger the notification via Make.com
+            if (mainText) {
+                const encodedMainText = encodeURIComponent(mainText);
+                const notificationUrl = 'https://hook.eu2.make.com/69r1qvlnls7r8yxfc6uefcr3sunagtrl?value1=' + encodedMainText;
+
+                fetch(notificationUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById('notificationStatus').innerText = 'Notification sent.';
+                        } else {
+                            document.getElementById('notificationStatus').innerText = 'Failed to send notification.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending notification:', error);
+                        document.getElementById('notificationStatus').innerText = 'Error sending notification.';
+                    });
+            }
+        })();
+    </script>
+</body>
+</html>
